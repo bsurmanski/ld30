@@ -24,12 +24,12 @@ struct Chunk {
         }
         .w = surf.w
         .h = surf.h
-        .blocks.ptr = malloc(.w * .h)
+        .blocks.ptr = malloc(.w * .h * Block.sizeof) // work around for new Block[w*h] not working
         .blocks.size = .w * .h
         for(int j = 0; j < .h; j++) {
             for(int i = 0; i < .w; i++) {
-                //int val = surf.getPixel(i, j)
-                //.blocks[i + j *.w] = Block(val)
+                int val = surf.getPixel(i, j)
+                .blocks[i + j * .w] = Block(val)
             }
         }
     }
@@ -39,6 +39,11 @@ struct Chunk {
     }
 
     void draw(SDL_Surface^ dst) {
-        SDL_UpperBlit(.s, null, dst, null)
+        //SDL_UpperBlit(.s, null, dst, null)
+        for(int j = 0; j < .h; j++) {
+            for(int i = 0; i < .w; i++) {
+                .blocks[i + j * .w].draw(dst, i, j)
+            }
+        }
     }
 }
