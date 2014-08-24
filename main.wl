@@ -4,15 +4,18 @@ import(C) "SDL/SDL.h"
 import(C) "SDL/SDL_image.h"
 
 import "map.wl"
+import "player.wl"
 
 bool running = true
-SDL_Surface^ surf;
-Map ^map;
+SDL_Surface^ surf
+Map ^map
+Player ^player
 
 void init() {
     surf = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE)
     IMG_Init(IMG_INIT_PNG)
     map = new Map()
+    player = new Player()
 }
 
 void deinit() {
@@ -26,13 +29,19 @@ void input() {
     if(keystate[SDLK_SPACE]) {
         running = false
     }
+
+    player.input(keystate)
 }
 
 void draw() {
     map.draw(surf)
+    player.draw(surf)
+    SDL_Flip(surf)
+    SDL_FillRect(surf, null, 0x0)
 }
 
 void update() {
+    player.update()
 }
 
 void delay() {
