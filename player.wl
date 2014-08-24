@@ -8,11 +8,16 @@ import "block.wl"
 
 SDL_Surface^ sprite = null
 
+const int STATE_FALLING = 0
+const int STATE_STANDING = 1
+
 struct Player {
     float x
     float y
     float vx
     float vy
+
+    int state
 
     this() {
         .x = 0
@@ -20,19 +25,66 @@ struct Player {
         .vx = 0
         .vy = 0
 
+        .state = 0
+
         if(!sprite) {
             sprite = IMG_Load("res/player.png")
         }
     }
 
     void update(Map^ map) {
-        .vy = .vy + 0.1
+        if(.vy < 8) .vy = .vy + 0.2
 
 
-        Block bl = map.getChunk().getBlock(.x / 16, .y / 16)
-        if(bl.isSolid()) {
-            .vy = 0
+        /*
+         * Collision Detection below
+         */
+
+        // Bottom samples
+        Block bl = map.getChunk().getBlock((.x+3) / 16, (.y / 16) + 1)
+        Block br = map.getChunk().getBlock((.x+12) / 16, (.y / 16) + 1)
+        if(bl.isSolid() || br.isSolid()) {
+            if(.vy > 0) {
+                .vy = 0
+                .y = (int:(.y / 16)) * 16 // round the y value
+            }
+            .state = STATE_STANDING
+        } else {
+            .state = STATE_FALLING
         }
+
+        // Top samples
+        Block tl = map.getChunk().getBlock((.x+3) / 16, (.y / 16))
+        Block tr = map.getChunk().getBlock((.x+12) / 16, (.y / 16))
+        if(tl.isSolid() || tr.isSolid()) {
+            if(.vy < 0) {
+                .vy = 0
+                .y = ((int:(.y / 16)) + 1) * 16 // round the y value
+            }
+        }
+
+        // Left samples
+        Block lt = map.getChunk().getBlock((.x) / 16, (.y+3) / 16)
+        Block lb = map.getChunk().getBlock((.x) / 16, (.y+12) / 16)
+        if(lt.isSolid() || lb.isSolid()) {
+            if(.vx < 0) {
+                .vx = 0
+                .x = ((int:(.x / 16)) + 1) * 16 // round the x value
+            }
+        }
+
+        // Right samples
+        Block rt = map.getChunk().getBlock((.x) / 16 + 1, (.y+3) / 16)
+        Block rb = map.getChunk().getBlock((.x) / 16 + 1, (.y+12) / 16)
+        if(rt.isSolid() || rb.isSolid()) {
+            if(.vx > 0) {
+                .vx = 0
+                .x = ((int:(.x / 16))) * 16 // round the x value
+            }
+        }
+        /*
+         * Collision Detection Above
+         */
 
         .x += .vx
         .y += .vy
@@ -45,6 +97,10 @@ struct Player {
 
         if(keystate[SDLK_d]) {
             .vx = .vx + 0.2
+        }
+
+        if(keystate[SDLK_w] && .state == STATE_STANDING) {
+            .vy = -5
         }
     }
 

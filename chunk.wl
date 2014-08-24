@@ -49,6 +49,9 @@ struct Chunk {
     }
 
     Block getBlock(int i, int j) {
-        return .blocks[i + j * .w]
+        if(i < .w && j < .h) {
+            return .blocks[i + j * .w]
+        }
+        return Block(0);
     }
 }

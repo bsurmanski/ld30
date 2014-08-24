@@ -37,7 +37,7 @@ void draw() {
     map.draw(surf)
     player.draw(surf)
     SDL_Flip(surf)
-    SDL_FillRect(surf, null, 0x0)
+    SDL_FillRect(surf, null, 0xffffffff)
 }
 
 void update() {
