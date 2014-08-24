@@ -23,4 +23,8 @@ struct Map {
     void draw(SDL_Surface^ dst) {
         .c.draw(dst)
     }
+
+    Chunk ^getChunk() {
+        return .c
+    }
 }

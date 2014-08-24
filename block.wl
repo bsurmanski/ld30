@@ -5,8 +5,8 @@ import(C) "SDL/SDL_image.h"
 
 SDL_Surface^[] blockImages
 
-int BLOCK_EMPTY = 0
-int BLOCK_ROCK = 1
+const int BLOCK_EMPTY = 0
+const int BLOCK_ROCK = 1
 
 void block_init() {
     blockImages = new SDL_Surface^[50]
@@ -33,6 +33,14 @@ struct Block {
             case 0x0, 0xff000000
                 .id = BLOCK_ROCK
         }
+    }
+
+    bool isSolid() {
+        switch(.id) {
+            case BLOCK_ROCK
+            return true
+        }
+        return false;
     }
 
     bool isDeadly() {

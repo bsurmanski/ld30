@@ -42,8 +42,13 @@ struct Chunk {
         //SDL_UpperBlit(.s, null, dst, null)
         for(int j = 0; j < .h; j++) {
             for(int i = 0; i < .w; i++) {
-                .blocks[i + j * .w].draw(dst, i, j)
+                Block bl = .getBlock(i, j)
+                bl.draw(dst, i, j)
             }
         }
+    }
+
+    Block getBlock(int i, int j) {
+        return .blocks[i + j * .w]
     }
 }

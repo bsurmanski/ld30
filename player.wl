@@ -3,6 +3,9 @@ use "importc"
 import(C) "SDL/SDL.h"
 import(C) "SDL/SDL_image.h"
 
+import "map.wl"
+import "block.wl"
+
 SDL_Surface^ sprite = null
 
 struct Player {
@@ -22,8 +25,14 @@ struct Player {
         }
     }
 
-    void update() {
+    void update(Map^ map) {
         .vy = .vy + 0.1
+
+
+        Block bl = map.getChunk().getBlock(.x / 16, .y / 16)
+        if(bl.isSolid()) {
+            .vy = 0
+        }
 
         .x += .vx
         .y += .vy

@@ -41,7 +41,7 @@ void draw() {
 }
 
 void update() {
-    player.update()
+    player.update(map)
 }
 
 void delay() {
