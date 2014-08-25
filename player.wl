@@ -171,7 +171,7 @@ class Player {
         if(.vy > -MAX_YSPEED && !.rightSide()) .vy = .vy - Y_ACCEL
 
         // dont allow players to go backward
-        if(.x < map.killx) .state = STATE_DEAD
+        if(.x < map.killwall.x) .state = STATE_DEAD
         if(.state != STATE_DEAD) .blocksPassed = .x / 16
 
         // passing downward through boundary

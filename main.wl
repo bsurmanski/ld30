@@ -7,6 +7,7 @@ import(C) "math.h"
 import "map.wl"
 import "player.wl"
 import "camera.wl"
+import "killwall.wl"
 
 bool running = true
 SDL_Surface^ surf
@@ -72,8 +73,7 @@ void delay() {
 
 void title() {
     player.reset()
-    map.killx = -32
-    map.vkillx = 0.1
+    map.reset()
     SDL_Surface ^img = IMG_Load("res/title.png")
     while(running) {
         SDL_PumpEvents()

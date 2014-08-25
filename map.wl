@@ -7,6 +7,7 @@ import(C) "math.h"
 import "block.wl"
 import "chunk.wl"
 import "camera.wl"
+import "killwall.wl"
 
 bool map_init = false
 
@@ -16,13 +17,11 @@ SDL_Surface^ water
 
 class Map {
     int timer
-    float killx
-    float vkillx
+    Killwall killwall
 
     this() {
         .timer = 0
-        .killx = -64
-        .vkillx = 0.1
+        .killwall = Killwall()
         printf("loading map\n")
         if(!map_init) {
             block_init()
@@ -40,6 +39,10 @@ class Map {
 
             map_init = true
         }
+    }
+
+    void reset() {
+        .killwall = Killwall()
     }
 
     void draw(SDL_Surface^ dst, Camera cam) {
@@ -65,11 +68,7 @@ class Map {
         .getChunk(-bx).draw(dst, cam, floor((0 - bx)/64) * 64)
         .getChunk(64-bx).draw(dst, cam, floor((64- bx)/64) * 64)
 
-        .killx = .killx + .vkillx
-        Block bl = Block(0xff0000ff)
-        for(int i = -32; i < 64; i++) {
-            bl.drawOffset(dst, .killx, i*16, cam)
-        }
+        .killwall.draw(dst, cam)
     }
 
     void drawOverlay(SDL_Surface^ dst, Camera cam) {
@@ -93,7 +92,7 @@ class Map {
 
     Chunk ^getChunk(int x) {
         if(x > 0)
-            return chunks[(x / 64) % 4]
+            return chunks[(x / 64) % 5]
         return chunks[0]
     }
 }
