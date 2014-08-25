@@ -19,6 +19,11 @@ void init() {
     map = new Map()
     player = new Player()
     camera = new Camera()
+
+    // something wrong with ref counting :(
+    retain camera
+    retain player
+    retain map
 }
 
 void deinit() {
@@ -39,6 +44,7 @@ void input() {
 void draw() {
     map.draw(surf, camera)
     player.draw(surf, camera)
+    map.drawOverlay(surf, camera)
     SDL_Flip(surf)
     SDL_FillRect(surf, null, 0xffffffff)
 }
@@ -72,11 +78,13 @@ void run() {
     init()
     while(running) {
         title()
-        while(player.isAlive() && running) {
+        int deathTimeout = 200
+        while(deathTimeout > 0 && running) {
             input()
             update()
             draw()
             delay()
+            if(!player.isAlive()) deathTimeout--
         }
     }
     deinit()

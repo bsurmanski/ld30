@@ -12,14 +12,19 @@ bool map_init = false
 
 Chunk^[] chunks
 SDL_Surface^ background
+SDL_Surface^ water
 
 class Map {
+    int timer
+
     this() {
+        .timer = 0
         printf("loading map\n")
         if(!map_init) {
             block_init()
             chunks = new Chunk^[50]
             background = IMG_Load("res/background.png")
+            water = IMG_Load("res/water.png")
 
             for(int i = 0; i < 50; i++) {
                 char[128] str
@@ -51,9 +56,22 @@ class Map {
         SDL_Rect r4 = [-512-cam.x % 512, -256-cam.y, 512, 1024]
         SDL_UpperBlit(background, null, dst, &r4)
 
+
         int bx = -cam.x / 16
-        .getChunk(bx).draw(dst, cam, floor((0 - bx)/64) * 64)
-        .getChunk(bx).draw(dst, cam, floor((64- bx)/64) * 64)
+        .getChunk(-bx).draw(dst, cam, floor((0 - bx)/64) * 64)
+        .getChunk(64-bx).draw(dst, cam, floor((64- bx)/64) * 64)
+    }
+
+    void drawOverlay(SDL_Surface^ dst, Camera cam) {
+        .timer++
+        SDL_Rect r1 = [-640-cam.x % 640 + sin(.timer / 100.0) * 64, 272-cam.y, 640, 480]
+        SDL_UpperBlit(water, null, dst, &r1)
+
+        SDL_Rect r2 = [-cam.x % 640 + sin(.timer / 100.0) * 64, 272-cam.y, 640, 480]
+        SDL_UpperBlit(water, null, dst, &r2)
+
+        SDL_Rect r3 = [640-cam.x % 640 + sin(.timer / 100.0) * 64, 272-cam.y, 640, 480]
+        SDL_UpperBlit(water, null, dst, &r3)
     }
 
     Block getBlock(long x, long y) {
@@ -64,6 +82,8 @@ class Map {
     }
 
     Chunk ^getChunk(int x) {
-        return chunks[x % 1]
+        if(x > 0)
+            return chunks[(x / 64) % 4]
+        return chunks[0]
     }
 }

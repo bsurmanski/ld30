@@ -167,6 +167,9 @@ class Player {
         if(.vy < MAX_YSPEED && .rightSide()) .vy = .vy + Y_ACCEL
         if(.vy > -MAX_YSPEED && !.rightSide()) .vy = .vy - Y_ACCEL
 
+        // dont allow players to go backward
+        if(.x < -20) .state = STATE_DEAD
+
         // passing downward through boundary
         if(.upside && !.rightSide()) {
             for(int i = 0; i < 10; i++) {
@@ -259,6 +262,10 @@ class Player {
 
         if(keystate[SDLK_d] && .vx < MAX_XSPEED) {
             .vx = .vx + 0.2
+        }
+
+        if(!.isAlive() || (keystate[SDLK_d] && keystate[SDLK_a])) {
+            .vx = .vx * 0.95
         }
 
         if(keystate[SDLK_w] && .state == STATE_STANDING && !.top_blocked && .rightSide()) {
