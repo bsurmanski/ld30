@@ -123,6 +123,8 @@ class Player {
     float vx
     float vy
 
+    int blocksPassed
+
     int state
 
     bool upside
@@ -133,6 +135,7 @@ class Player {
         .y = 0
         .vx = 0
         .vy = 0
+        .blocksPassed = 0
 
         .state = 0
 
@@ -168,7 +171,8 @@ class Player {
         if(.vy > -MAX_YSPEED && !.rightSide()) .vy = .vy - Y_ACCEL
 
         // dont allow players to go backward
-        if(.x < -20) .state = STATE_DEAD
+        if(.x < map.killx) .state = STATE_DEAD
+        if(.state != STATE_DEAD) .blocksPassed = .x / 16
 
         // passing downward through boundary
         if(.upside && !.rightSide()) {

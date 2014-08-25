@@ -16,9 +16,13 @@ SDL_Surface^ water
 
 class Map {
     int timer
+    float killx
+    float vkillx
 
     this() {
         .timer = 0
+        .killx = -64
+        .vkillx = 0.1
         printf("loading map\n")
         if(!map_init) {
             block_init()
@@ -60,6 +64,12 @@ class Map {
         int bx = -cam.x / 16
         .getChunk(-bx).draw(dst, cam, floor((0 - bx)/64) * 64)
         .getChunk(64-bx).draw(dst, cam, floor((64- bx)/64) * 64)
+
+        .killx = .killx + .vkillx
+        Block bl = Block(0xff0000ff)
+        for(int i = -32; i < 64; i++) {
+            bl.drawOffset(dst, .killx, i*16, cam)
+        }
     }
 
     void drawOverlay(SDL_Surface^ dst, Camera cam) {

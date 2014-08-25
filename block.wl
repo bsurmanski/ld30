@@ -56,4 +56,9 @@ struct Block {
         SDL_Rect r = [int: (x * 16 - cam.x), int: (y * 16 - cam.y), 16, 16]
         SDL_UpperBlit(blockImages[.id], null, dst, &r)
     }
+
+    void drawOffset(SDL_Surface^ dst, float x, float y, Camera cam) {
+        SDL_Rect r = [int: (x - cam.x), int: (y - cam.y), 16, 16]
+        SDL_UpperBlit(blockImages[.id], null, dst, &r)
+    }
 }

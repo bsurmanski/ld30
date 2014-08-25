@@ -2,6 +2,7 @@ use "importc"
 
 import(C) "SDL/SDL.h"
 import(C) "SDL/SDL_image.h"
+import(C) "math.h"
 
 import "map.wl"
 import "player.wl"
@@ -13,12 +14,22 @@ Map map
 Player player
 Camera camera
 
+SDL_Surface^[] font
+
 void init() {
     surf = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE)
     IMG_Init(IMG_INIT_PNG)
     map = new Map()
     player = new Player()
     camera = new Camera()
+
+    font = new SDL_Surface^[10]
+
+    for(int i = 0; i < 10; i++) {
+        char[32] path
+        sprintf(path.ptr, "res/font/%d.png", i)
+        font[i] = IMG_Load(path.ptr)
+    }
 
     // something wrong with ref counting :(
     retain camera
@@ -61,6 +72,8 @@ void delay() {
 
 void title() {
     player.reset()
+    map.killx = -32
+    map.vkillx = 0.1
     SDL_Surface ^img = IMG_Load("res/title.png")
     while(running) {
         SDL_PumpEvents()
@@ -68,6 +81,38 @@ void title() {
         if(keystate[SDLK_SPACE]) break
         if(keystate[SDLK_ESCAPE]) running = false
         SDL_UpperBlit(img, null, surf, null)
+        SDL_Flip(surf)
+        SDL_Delay(16)
+    }
+    SDL_FreeSurface(img)
+}
+
+void drawScore() {
+    int score = player.blocksPassed
+    if(score < 0) score = 0
+
+    uint ndig = floor(log10(score)) + 1
+    uint dign = 1
+    while(score) {
+        uint sdig = score % 10
+        score = score / 10
+
+        SDL_Rect r = [300 + (ndig-dign) * 32, 220, 32, 64]
+        SDL_UpperBlit(font[sdig], null, surf, &r)
+
+        dign++
+    }
+}
+
+void score() {
+    SDL_Surface ^img = IMG_Load("res/score.png")
+    while(running) {
+        SDL_PumpEvents()
+        uint8^ keystate = SDL_GetKeyState(null)
+        if(keystate[SDLK_SPACE]) break
+        if(keystate[SDLK_ESCAPE]) running = false
+        SDL_UpperBlit(img, null, surf, null)
+        drawScore()
         SDL_Flip(surf)
         SDL_Delay(16)
     }
@@ -86,6 +131,7 @@ void run() {
             delay()
             if(!player.isAlive()) deathTimeout--
         }
+        score()
     }
     deinit()
 }
