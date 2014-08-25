@@ -46,13 +46,14 @@ struct Node {
 
     ~this() {
         // stitch up left and right if deleted
+        /*
         if(.next) {
             .next.prev = .prev
         }
 
         if(.prev) {
             .prev.next = .next
-        }
+        }*/
     }
 }
 
@@ -91,11 +92,23 @@ class List {
             if(del) {
                 Node ^next = node.next
                 if(node == list.first) list.first = null
+                if(node.next) {
+                    node.next.prev = node.prev
+                }
+
+                if(node.prev) {
+                    node.prev.next = node.next
+                }
                 delete node
                 node = next
             } else {
                 node = node.next
             }
+        }
+
+        node = list.first
+        while(node) {
+            node = node.next
         }
     }
 
@@ -140,6 +153,7 @@ class Player {
         .state = 0
 
         .top_blocked = false
+        .upside = true
 
         if(!player_init) {
             sprite = IMG_Load("res/player.png")
@@ -176,14 +190,19 @@ class Player {
 
         // passing downward through boundary
         if(.upside && !.rightSide()) {
-            for(int i = 0; i < 10; i++) {
-                Particle p = [.x, .y, rand_float() * 3.0, rand_float() - .vy, 0x0000ffff]
-                //list.prepend(p) //XXX add particle to list
+            for(int i = 0; i < 20; i++) {
+                Particle p = [.x+8, .y+8, rand_float() * 3.0, rand_float() - .vy, 0xff4444ff]
+                list.prepend(p) //XXX add particle to list
+            }
+        } else if(!.upside && .rightSide()) {
+            for(int i = 0; i < 20; i++) {
+                Particle p = [.x+8, .y+8, rand_float() * 3.0, rand_float() + .vy, 0xff4444ff]
+                list.prepend(p) //XXX add particle to list
             }
         }
         .upside = .rightSide()
 
-        //list.update(map) // XXX update particles
+        list.update(map)
 
         /*
          * Collision Detection below
@@ -286,6 +305,6 @@ class Player {
         if(!.isAlive()) SDL_UpperBlit(xsprite, null, dst, &r)
         else if(.rightSide()) SDL_UpperBlit(sprite, null, dst, &r)
         else SDL_UpperBlit(usprite, null, dst, &r)
-        // list.draw(dst, cam) // XXX draw particles
+        list.draw(dst, cam)
     }
 }
