@@ -10,6 +10,10 @@ int getPixel(SDL_Surface ^s, int x, int y) {
 }
 
 void setPixel(SDL_Surface^ s, int x, int y, int val) {
+    if(x < 0) return
+    if(y < 0) return
+    if(x > s.w) return
+    if(y > s.h) return
     int ^r = &(s.pixels[x * s.format.BytesPerPixel + y * s.pitch])
     ^r = val
 }

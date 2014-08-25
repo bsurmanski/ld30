@@ -9,10 +9,11 @@ SDL_Surface^[] blockImages
 
 const int BLOCK_EMPTY = 0
 const int BLOCK_ROCK = 1
+const int BLOCK_SPIKE = 2
 
 void block_init() {
     blockImages = new SDL_Surface^[50]
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < 3; i++) {
         char[20] str
         sprintf(str.ptr, "res/blocks/%d.png", i)
         blockImages[i] = IMG_Load(str.ptr)
@@ -34,6 +35,8 @@ struct Block {
                 .id = BLOCK_EMPTY
             case 0x0, 0xff000000
                 .id = BLOCK_ROCK
+            case 0xff0000ff
+                .id = BLOCK_SPIKE
         }
     }
 
@@ -46,7 +49,7 @@ struct Block {
     }
 
     bool isDeadly() {
-        return false
+        return .id == BLOCK_SPIKE
     }
 
     void draw(SDL_Surface ^dst, int x, int y, Camera cam) {

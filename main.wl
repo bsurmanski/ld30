@@ -29,7 +29,7 @@ void deinit() {
 void input() {
     SDL_PumpEvents()
     uint8^ keystate = SDL_GetKeyState(null)
-    if(keystate[SDLK_SPACE]) {
+    if(keystate[SDLK_ESCAPE]) {
         running = false
     }
 
@@ -53,13 +53,31 @@ void delay() {
     SDL_Delay(16)
 }
 
+void title() {
+    player.reset()
+    SDL_Surface ^img = IMG_Load("res/title.png")
+    while(running) {
+        SDL_PumpEvents()
+        uint8^ keystate = SDL_GetKeyState(null)
+        if(keystate[SDLK_SPACE]) break
+        if(keystate[SDLK_ESCAPE]) running = false
+        SDL_UpperBlit(img, null, surf, null)
+        SDL_Flip(surf)
+        SDL_Delay(16)
+    }
+    SDL_FreeSurface(img)
+}
+
 void run() {
     init()
     while(running) {
-        input()
-        update()
-        draw()
-        delay()
+        title()
+        while(player.isAlive() && running) {
+            input()
+            update()
+            draw()
+            delay()
+        }
     }
     deinit()
 }

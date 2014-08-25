@@ -2,6 +2,7 @@ use "importc"
 
 import(C) "SDL/SDL.h"
 import(C) "SDL/SDL_image.h"
+import(C) "math.h"
 
 import "block.wl"
 import "chunk.wl"
@@ -33,24 +34,36 @@ class Map {
     }
 
     void draw(SDL_Surface^ dst, Camera cam) {
-        SDL_Rect r = [(-cam.x) % 1024, (-cam.y) % 1024, 512, 512]
+
+        // draw the background. we draw it 4 times so that
+        // it tiles across the screen without any edge.
+        // kinda messy, could probably do the same with 2 images, but whatever
+        // hard coded '512' is the tiling, 256 is the YOffset to make image fit in center
+        SDL_Rect r = [-cam.x % 512, -256-cam.y, 512, 1024]
         SDL_UpperBlit(background, null, dst, &r)
 
-        SDL_Rect r2 = [(512-cam.x) % 1024, (-cam.y) % 1024, 512, 512]
+        SDL_Rect r2 = [512-cam.x % 512, -256-cam.y, 512, 1024]
         SDL_UpperBlit(background, null, dst, &r2)
 
-        SDL_Rect r3 = [(-(cam.x+512)) % 1024, (-cam.y) % 1024, 512, 512]
+        SDL_Rect r3 = [1024-cam.x % 512, -256-cam.y, 512, 1024]
         SDL_UpperBlit(background, null, dst, &r3)
 
-        chunks[0].draw(dst, cam, 0)
-        chunks[0].draw(dst, cam, 64)
+        SDL_Rect r4 = [-512-cam.x % 512, -256-cam.y, 512, 1024]
+        SDL_UpperBlit(background, null, dst, &r4)
+
+        int bx = -cam.x / 16
+        .getChunk(bx).draw(dst, cam, floor((0 - bx)/64) * 64)
+        .getChunk(bx).draw(dst, cam, floor((64- bx)/64) * 64)
     }
 
     Block getBlock(long x, long y) {
-        return .getChunk().getBlock(x / 16, y / 16)
+        int bx = x / 16
+        int by = y / 16
+        if(x > 0 && y > 0) return .getChunk(bx).getBlock(bx % 64, by % 64)
+        return Block(0xffffffff)
     }
 
-    Chunk ^getChunk() {
-        return chunks[0]
+    Chunk ^getChunk(int x) {
+        return chunks[x % 1]
     }
 }
