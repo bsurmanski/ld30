@@ -18,6 +18,7 @@ void init() {
     IMG_Init(IMG_INIT_PNG)
     map = new Map()
     player = new Player()
+    camera = new Camera()
 }
 
 void deinit() {
@@ -36,13 +37,15 @@ void input() {
 }
 
 void draw() {
-    map.draw(surf)
-    player.draw(surf)
+    map.draw(surf, camera)
+    player.draw(surf, camera)
     SDL_Flip(surf)
     SDL_FillRect(surf, null, 0xffffffff)
 }
 
 void update() {
+    camera.setFocus(player.x, player.y)
+    camera.update(map)
     player.update(map)
 }
 

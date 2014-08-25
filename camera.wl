@@ -15,12 +15,12 @@ class Camera {
     }
 
     void update(Map map) {
-        .x = .x + ((.x - .focusx) / 100)
-        .y = .y + ((.y - .focusy) / 100)
+        .x = .x + ((.focusx - .x) / 20)
+        .y = .y + ((.focusy - .y) / 20)
     }
 
     void setFocus(float x, float y) {
-        .focusx = x
-        .focusy = y
+        .focusx = x - 320
+        .focusy = y - 240
     }
 }

@@ -8,6 +8,7 @@ import(C) "SDL/SDL_image.h"
  */
 
 import "block.wl"
+import "camera.wl"
 import "sdl.wl"
 
 struct Chunk {
@@ -36,12 +37,12 @@ struct Chunk {
         //delete .blocks
     }
 
-    void draw(SDL_Surface^ dst) {
+    void draw(SDL_Surface^ dst, Camera cam, int x) {
         //SDL_UpperBlit(.s, null, dst, null)
         for(int j = 0; j < .h; j++) {
             for(int i = 0; i < .w; i++) {
                 Block bl = .getBlock(i, j)
-                bl.draw(dst, i, j)
+                bl.draw(dst, i + x, j, cam)
             }
         }
     }

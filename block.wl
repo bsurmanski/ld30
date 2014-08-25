@@ -3,6 +3,8 @@ use "importc"
 import(C) "SDL/SDL.h"
 import(C) "SDL/SDL_image.h"
 
+import "camera.wl"
+
 SDL_Surface^[] blockImages
 
 const int BLOCK_EMPTY = 0
@@ -47,8 +49,8 @@ struct Block {
         return false
     }
 
-    void draw(SDL_Surface ^dst, int x, int y) {
-        SDL_Rect r = [x * 16, y * 16, 16, 16]
+    void draw(SDL_Surface ^dst, int x, int y, Camera cam) {
+        SDL_Rect r = [int: (x * 16 - cam.x), int: (y * 16 - cam.y), 16, 16]
         SDL_UpperBlit(blockImages[.id], null, dst, &r)
     }
 }

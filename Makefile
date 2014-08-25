@@ -1,5 +1,5 @@
 all:
-	wlc *.wl -lSDL -lSDL_image
+	wlc main.wl -lSDL -lSDL_image
 
 ll:
-	wlc *.wl -lSDL -lSDL_image -S
+	wlc main.wl -lSDL -lSDL_image -S
