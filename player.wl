@@ -11,13 +11,15 @@ SDL_Surface^ sprite = null
 const int STATE_FALLING = 0
 const int STATE_STANDING = 1
 
-struct Player {
+class Player {
     float x
     float y
     float vx
     float vy
 
     int state
+
+    bool top_blocked
 
     this() {
         .x = 0
@@ -27,12 +29,14 @@ struct Player {
 
         .state = 0
 
+        .top_blocked = false
+
         if(!sprite) {
             sprite = IMG_Load("res/player.png")
         }
     }
 
-    void update(Map^ map) {
+    void update(Map map) {
         if(.vy < 8) .vy = .vy + 0.2
 
 
@@ -62,6 +66,12 @@ struct Player {
                 .y = ((int:(.y / 16)) + 1) * 16 // round the y value
             }
         }
+
+        // top is blocked, can not jump
+        Block ttl = map.getChunk().getBlock((.x+3) / 16, ((.y-5) / 16))
+        Block ttr = map.getChunk().getBlock((.x+12) / 16, ((.y-5) / 16))
+        if(ttl.isSolid() || ttr.isSolid()) .top_blocked = true
+        else .top_blocked = false
 
         // Left samples
         Block lt = map.getChunk().getBlock((.x) / 16, (.y+3) / 16)
@@ -99,7 +109,7 @@ struct Player {
             .vx = .vx + 0.2
         }
 
-        if(keystate[SDLK_w] && .state == STATE_STANDING) {
+        if(keystate[SDLK_w] && .state == STATE_STANDING && !.top_blocked) {
             .vy = -5
         }
     }

@@ -15,10 +15,8 @@ struct Chunk {
     int h
     Block[] blocks
     SDL_Surface^ s
-    this(char^ file) {
-        SDL_Surface^ surf = IMG_Load(file)
+    this(SDL_Surface^ surf) {
         .s = surf
-        printf("loading chunk '%s'\n", file)
         if(!surf) {
             printf("ERROR!!\n")
         }

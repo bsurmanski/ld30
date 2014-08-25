@@ -5,11 +5,13 @@ import(C) "SDL/SDL_image.h"
 
 import "map.wl"
 import "player.wl"
+import "camera.wl"
 
 bool running = true
 SDL_Surface^ surf
-Map ^map
-Player ^player
+Map map
+Player player
+Camera camera
 
 void init() {
     surf = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE)
