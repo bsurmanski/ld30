@@ -10,8 +10,8 @@ struct Killwall {
     float vx
 
     this() {
-        .timeout = 0
-        .x = -64
+        .timeout = 200
+        .x = -128
         .vx = 0.1
     }
 
