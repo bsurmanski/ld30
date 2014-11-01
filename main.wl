@@ -68,7 +68,7 @@ void update() {
 }
 
 void delay() {
-    SDL_Delay(16)
+    SDL_Delay(6)
 }
 
 void title() {
