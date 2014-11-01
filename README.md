@@ -17,6 +17,11 @@ Cross the wet-dry volcanic lake! Jump between water and land to progress and
 avoid the spikes.  When in water, gravity flips upside-down, allowing you to
 traverse floating debris.
 
+### Art
+Note: I am not an artist. The title screen is especially regrettable, but this
+game was created during a game jam and the focus was exploring my language, so
+I feel it can be forgiven.
+
 ### Screenshot
 
 ![traversing underwater](/screenshot/01.png?raw=true)
