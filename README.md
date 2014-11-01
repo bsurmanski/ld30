@@ -4,7 +4,7 @@
 ### Language
 This game was created in the experimental OWL programming language. The OWL
 compiler can be found on my github account,
-[www.github.com/bsurmanski/wlc](here). 
+[https://github.com/bsurmanski/wlc](here). 
 
 This game was a test of the recent additions to OWL, including class types,
 struct and class methods, extension methods, struct literals, and arrays.
