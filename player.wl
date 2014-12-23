@@ -287,7 +287,7 @@ class Player {
             .vx = .vx + 0.2
         }
 
-        if(!.isAlive() || (keystate[SDLK_d] && keystate[SDLK_a])) {
+        if(!.isAlive() or (keystate[SDLK_d] and keystate[SDLK_a])) {
             .vx = .vx * 0.95
         }
 

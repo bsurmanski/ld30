@@ -67,8 +67,15 @@ void update() {
     player.update(map)
 }
 
+int oldTime = 0
+int newTime = 0
 void delay() {
-    SDL_Delay(16)
+    oldTime = newTime
+    newTime = SDL_GetTicks()
+    printf("%d\n", newTime - oldTime);
+    if(newTime - oldTime < 16) {
+        SDL_Delay(newTime - oldTime)
+    }
 }
 
 void title() {
@@ -82,7 +89,7 @@ void title() {
         if(keystate[SDLK_ESCAPE]) running = false
         SDL_UpperBlit(img, null, surf, null)
         SDL_Flip(surf)
-        SDL_Delay(16)
+        delay()
     }
     SDL_FreeSurface(img)
 }
@@ -114,7 +121,7 @@ void score() {
         SDL_UpperBlit(img, null, surf, null)
         drawScore()
         SDL_Flip(surf)
-        SDL_Delay(16)
+        delay()
     }
     SDL_FreeSurface(img)
 }
