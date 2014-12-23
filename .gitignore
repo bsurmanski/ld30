@@ -2,3 +2,4 @@ a.out
 core.*
 vgcore.*
 output.ll
+stderr.log
