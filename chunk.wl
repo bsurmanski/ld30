@@ -23,8 +23,7 @@ struct Chunk {
         }
         .w = surf.w
         .h = surf.h
-        .blocks.ptr = malloc(.w * .h * Block.sizeof) // work around for new Block[w*h] not working
-        .blocks.size = .w * .h
+        .blocks = new Block[.w * .h]
         for(int j = 0; j < .h; j++) {
             for(int i = 0; i < .w; i++) {
                 int val = surf.getPixel(i, j)
